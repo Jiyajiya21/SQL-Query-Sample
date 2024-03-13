@@ -338,3 +338,34 @@ FROM Matches)
 cte join teams on cte.home_team_id = teams.team_id
 group by 1
 order by points desc, goal_diff desc, team_name 
+
+-- 19) Write an SQL query to find the account_id of the accounts that should be 
+--banned from Leetflex. An account should be banned if it was logged in at 
+--some moment from two different IP addresses.
+
+with cte as(
+select *
+, case when login > lead(login) over(partition by account_id order by ip_address) 
+or logout > lead(logout) over(partition by account_id order by ip_address)
+or logout >= lead(login) over(partition by account_id order by ip_address)
+then 1 else 0 end as account_id1
+from loginfo)
+
+select account_id from cte
+where account_id1 = 1
+
+--20) Write an SQL query that reports for every date within at most 90 days 
+from today, the number of users that logged in for the first time on that 
+date. Assume today is 2019-06-30.
+
+with cte as 
+(SELECT *
+, rank() over
+(partition by user_id order by activity_date )
+FROM TRAFFIC 
+WHERE activity = 'login')
+
+select activity_date as login_date, count(user_id) as user_count 
+from cte where rank = 1 
+and '2019-6-30' - activity_date <= 90
+group by 1
