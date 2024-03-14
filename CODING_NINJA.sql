@@ -369,3 +369,77 @@ select activity_date as login_date, count(user_id) as user_count
 from cte where rank = 1 
 and '2019-6-30' - activity_date <= 90
 group by 1
+
+-- 21)Write an SQL query to find the employees who are high earners in each of 
+--the departments.
+
+--OPTION 1
+with cte as (select e.id, e.name as Employee, 
+e.salary as Salary, d.name as Department 
+, dense_rank () 
+over(partition by departmentid order by Salary desc)
+from employee e join department d 
+on e.departmentid = d.id)
+
+select department as Department, employee as Employee, salary as Salary
+from cte
+where dense_rank < 3; 
+
+--OPTION 2
+
+SELECT d.Name AS "Department"
+, e1.Name AS "Employee"
+, e1.Salary 
+FROM Employee e1 JOIN Department d 
+ON e1.DepartmentId = d.Id 
+WHERE 3 > 
+        (SELECT COUNT(DISTINCT e2.Salary) 
+        FROM Employee e2 
+        WHERE e2.Salary > e1.Salary AND e1.DepartmentId = e2.DepartmentId);
+
+--22) Write a sql query to get the amount of each follower’s follower if he/she has one.
+
+--option 1
+select F1.FOLLOWEE as follower, COUNT(F1.FOLLOWEE) AS NUM
+from follow f1
+join follow f2 
+on f1.followee <> f2.followee
+where f1.followee  = f2.follower   
+GROUP BY 1
+
+--Option 2
+select followee as follower, count(followee) as num
+from follow
+where followee in (select distinct follower from follow)
+group by 1 
+
+--23) Write an SQL query to find all the possible triplets 
+--representing the country under the given constraints.
+
+
+--option 1
+select a.student_name as "member_A", 
+b.student_name as "member_B", 
+c.student_name as "member_C"
+from schoola a join schoolb b
+on a.student_id <> b.student_id
+join schoolc c
+on a.student_id <> c.student_id
+and b.student_id <> c.student_id
+where b.student_id not in (c.student_id)
+and a.student_name not in (b.student_name,c.student_name) 
+and b.student_name not in (c.student_name);
+
+--option 2
+
+select a.student_name as member_A
+,b.student_name as member_b
+,c.student_name as member_c 
+from schoolA a cross join schoolB b 
+cross join schoolC c 
+where a.student_id not in (b.student_id,c.student_id) 
+and b.student_id not in (c.student_id) 
+and a.student_name not in (b.student_name,c.student_name) 
+and b.student_name not in (c.student_name);
+
+-- test
