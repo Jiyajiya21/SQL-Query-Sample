@@ -457,6 +457,52 @@ group by 1,2,3
  select customer_id, product_id, product_name from s2 
  where rank = 1
 
+ -- 25) Write an SQL query to find all the strong friendships.
+with f as 
+(select user1_id, user2_id 
+from Friendship 
+union 
+select user2_id as user1_id, user1_id as user2_id 
+from Friendship)
+
+ select a.user1_id, a.user2_id, 
+count(c.user2_id) as common_friend 
+from Friendship a join f b 
+on a.user1_id = b.user1_id 
+join f c 
+on a.user2_id = c.user1_id 
+and b.user2_id = c.user2_id 
+group by a.user1_id, a.user2_id 
+having count(c.user2_id) >= 3
+order by common_friend desc;
+
+
+--26)Write an SQL query to find how many users visited the bank and 
+--didnt do any transactions, how many visited the bank and did one 
+--transaction and so on.
+
+with cte as (select v.user_id, visit_date
+ , count(transaction_date) transactions_count1
+from Visits v left join Transactions T 
+on v.user_id = t.user_id
+and v.visit_date = t.transaction_date
+group by 1,2
+ )
+
+ ,cte3 as (SELECT 
+    generate_series(MIN(transactions_count1), MAX(transactions_count1))
+    as transactions_count
+     FROM cte)
+select cte3.transactions_count 
+ , count(transactions_count1) as visits_count
+from cte3 left join cte
+on cte3.transactions_count = cte.transactions_count1
+group by 1
+order by 1
+
+
+
+
 
 
 
