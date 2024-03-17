@@ -442,4 +442,22 @@ and b.student_id not in (c.student_id)
 and a.student_name not in (b.student_name,c.student_name) 
 and b.student_name not in (c.student_name);
 
--- test
+-- 24)Write an SQL query to find the mostfrequently ordered product(s) for each customer.
+
+with s1 as (
+select o.customer_id, p.product_id, p.product_name  
+, count(*) as product_count from orders o
+--left join customers c on c.customer_id = o.customer_id
+ join products p on p.product_id = o.product_id
+group by 1,2,3
+) 
+, s2 as(select *
+, rank() over(partition by customer_id order by product_count desc) from s1 )
+
+ select customer_id, product_id, product_name from s2 
+ where rank = 1
+
+
+
+
+
