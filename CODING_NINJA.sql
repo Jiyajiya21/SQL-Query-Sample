@@ -500,6 +500,7 @@ on cte3.transactions_count = cte.transactions_count1
 group by 1
 order by 1
 
+-- test
 
 
 
