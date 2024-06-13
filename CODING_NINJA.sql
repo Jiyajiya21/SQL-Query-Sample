@@ -36,11 +36,11 @@ FROM Friendship WHERE user1_id = 1
 page_id NOT IN ( SELECT page_id FROM Likes WHERE user_id = 1 );
 
 -- 2)Write an SQL query to 
---find the names of all the activities with neither maximum, nor minimum number of participants.
-with cte as 
+--find the names of all the activities with neither maximum nor minimum number of participants.
 
-  (select a.name
-   , count(*) 
+with cte as 
+  (select a.name 
+   , count(*) as count 
     from friends f left join activities a 
     on f.activity = a.name 
      group by 1)
@@ -50,6 +50,7 @@ with cte as
                 count <> (select min(count) from cte)
 
 -- 3)Write an SQL query to find the countries where this company can invest.
+      
 select c.name as country from
 (select caller_id as id, duration 
 from calls 
@@ -71,6 +72,7 @@ group by 1
 
 -- 4)Write an SQL query to find all the pairs of users with the maximum number of common followers. In other words, if the maximum number of common followers between any two users is maxCommon
 --, then you have to return all pairs of users that have maxCommon common followers.
+      
 select user1_id, user2_id 
 from 
 (select r1.user_id as user1_id
@@ -79,11 +81,11 @@ from
 from Relations r1, Relations r2 
 where r1.user_id < r2.user_id and r1.follower_id = r2.follower_id 
 group by r1.user_id, r2.user_id)
-
  temp where rk = 1;
 
  
 -- 5)Write an SQL query to report the Capital gain/loss for each stock.
+
 with cte as(select stock_name
 , operation
 , operation_day,price
@@ -112,7 +114,6 @@ select company_id, employee_id, employee_name
           then salary - (salary * 24)/100 
        else salary - (salary * 49)/100 
        end as salary
-
     from salaries
 
 -- 7)Write an SQL query to evaluate the boolean expressions in Expressions table.
@@ -309,9 +310,7 @@ order by id
 --between 1 and the maximum customer_id present in the table.
 
 SELECT generate_series(1, (SELECT MAX(customer_id) FROM customers)) AS ids
-
 EXCEPT
-
 SELECT customer_id FROM customers;
 
 /* 18)Write an SQL query to report the statistics of the league. The statistics
@@ -500,7 +499,7 @@ on cte3.transactions_count = cte.transactions_count1
 group by 1
 order by 1
 
--- test
+
 
 
 
