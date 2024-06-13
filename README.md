@@ -4,12 +4,20 @@ It is a small snapshot of my work in SQL, but I chose these to share based on th
 
 ## Included concepts:
 -Aggregation
+
 -Union
+
 -Subqueries
+
 -Case When, SUM(CASE WHEN...)
+
 -Row numbers/ranking based on value
+
 -Max/Min/Average
+
 -Over/Partition By
+
 -Data Modeling
+
 -Lead/Lag
 
