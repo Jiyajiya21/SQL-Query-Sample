@@ -36,7 +36,7 @@ FROM Friendship WHERE user1_id = 1
 page_id NOT IN ( SELECT page_id FROM Likes WHERE user_id = 1 );
 
 -- 2)Write an SQL query to 
---find the names of all the activities with neither maximum nor minimum number of participants.
+-- find the names of all the activities with neither maximum nor minimum number of participants.
 
 with cte as 
   (select a.name 
@@ -62,7 +62,7 @@ join country c on c.country_code = LEFT(p.phone_number, 3)
 group by 1 
 having avg(duration)> (select avg(duration) from calls)
 
---Write an SQL query to find the confirmation rate of each user.
+-- Write an SQL query to find the confirmation rate of each user.
 select s.user_id  
 , round(avg(case when action_value = 'confirmed' 
             then 1 else 0 end),2) as confirmation_rate
@@ -129,7 +129,7 @@ join variables v2
 on v2.name = e.right_operand
 
 -- 8)Write an SQL query to recommend pages to the user with user_id = 1
---using the pages that your friends liked. It should not recommend pages
+-- using the pages that your friends liked. It should not recommend pages
 -- you already liked.
 
 with cte as
@@ -240,7 +240,7 @@ select department as "Department", employee as "Employee"
 from cte
 where cte.rank = 1;
 
---OPTION 2
+-- OPTION 2
 
 select d.name as Department, e.name as Employee, e.salary as Salary
 from employee e join department d 
@@ -248,7 +248,7 @@ on e.departmentid = d.id
 join (select departmentid, max(salary) from employee group by 1) a
 on a.departmentid =  e.departmentid and e.salary = a.max
 
---OPTION 3
+-- OPTION 3
 
 SELECT Department.name AS "Department"
 , Employee.name AS "Employee"
@@ -260,7 +260,7 @@ SELECT Department.name AS "Department"
  ( SELECT DepartmentId, MAX(Salary) FROM Employee GROUP BY DepartmentId ) ;
 
  -- 14)Write a SQL query that finds out managers with at least 5 direct 
---report. For the above table, your SQL query should return:
+-- report. For the above table, your SQL query should return:
 
   SELECT NAME FROM Employee 
   WHERE Id IN 
@@ -275,7 +275,7 @@ Have the same TIV_2015 value as one or more other policyholders.
 Are not located in the same city as any other policyholder (i.e.: the (latitude, longitude) attribute pairs must be unique).
 Input Format:*/
 
---OPTION 1
+-- OPTION 1
 
 select round(sum(distinct i1.tiv_2016),2) as "TIV_2016" 
 from insurance  i1 join insurance i2 
@@ -284,7 +284,7 @@ where i1.tiv_2015 = i2.tiv_2015
 and i1.lat not in (select lat from insurance group by lat having count(lat)>1)
 and i1.lon not in (select lon from insurance group by lon having count(lon)>1)
 
---OPTION 2
+-- OPTION 2
 
 select round(sum(TIV_2016),2) as TIV_2016 from
 
@@ -294,7 +294,7 @@ where TIV_2015 in (select TIV_2015 from insurance group by TIV_2015 having count
 
 (lat,lon)not in (select lat,lon from insurance group by lat,lon having count(*)>1) ) as table1;
 
---16)Write a query to print the node id and the type of the node. Sort your 
+-- 16)Write a query to print the node id and the type of the node. Sort your 
 --output by the node id
 
 select 
@@ -306,8 +306,8 @@ from tree
 order by id
 
 -- 17) Write an SQL query to find the missing customer IDs. The missing IDs 
---are ones that are not in the Customers table but are in the range 
---between 1 and the maximum customer_id present in the table.
+-- are ones that are not in the Customers table but are in the range 
+-- between 1 and the maximum customer_id present in the table.
 
 SELECT generate_series(1, (SELECT MAX(customer_id) FROM customers)) AS ids
 EXCEPT
@@ -339,8 +339,8 @@ group by 1
 order by points desc, goal_diff desc, team_name 
 
 -- 19) Write an SQL query to find the account_id of the accounts that should be 
---banned from Leetflex. An account should be banned if it was logged in at 
---some moment from two different IP addresses.
+-- banned from Leetflex. An account should be banned if it was logged in at 
+-- some moment from two different IP addresses.
 
 with cte as(
 select *
@@ -353,7 +353,7 @@ from loginfo)
 select account_id from cte
 where account_id1 = 1
 
---20) Write an SQL query that reports for every date within at most 90 days 
+-- 20) Write an SQL query that reports for every date within at most 90 days 
 from today, the number of users that logged in for the first time on that 
 date. Assume today is 2019-06-30.
 
@@ -384,7 +384,7 @@ select department as Department, employee as Employee, salary as Salary
 from cte
 where dense_rank < 3; 
 
---OPTION 2
+-- OPTION 2
 
 SELECT d.Name AS "Department"
 , e1.Name AS "Employee"
@@ -396,7 +396,7 @@ WHERE 3 >
         FROM Employee e2 
         WHERE e2.Salary > e1.Salary AND e1.DepartmentId = e2.DepartmentId);
 
---22) Write a sql query to get the amount of each follower’s follower if he/she has one.
+-- 22) Write a sql query to get the amount of each follower’s follower if he/she has one.
 
 --option 1
 select F1.FOLLOWEE as follower, COUNT(F1.FOLLOWEE) AS NUM
@@ -406,17 +406,17 @@ on f1.followee <> f2.followee
 where f1.followee  = f2.follower   
 GROUP BY 1
 
---Option 2
+-- Option 2
 select followee as follower, count(followee) as num
 from follow
 where followee in (select distinct follower from follow)
 group by 1 
 
---23) Write an SQL query to find all the possible triplets 
---representing the country under the given constraints.
+-- 23) Write an SQL query to find all the possible triplets 
+-- representing the country under the given constraints.
 
 
---option 1
+-- option 1
 select a.student_name as "member_A", 
 b.student_name as "member_B", 
 c.student_name as "member_C"
@@ -429,7 +429,7 @@ where b.student_id not in (c.student_id)
 and a.student_name not in (b.student_name,c.student_name) 
 and b.student_name not in (c.student_name);
 
---option 2
+-- option 2
 
 select a.student_name as member_A
 ,b.student_name as member_b
@@ -476,7 +476,7 @@ having count(c.user2_id) >= 3
 order by common_friend desc;
 
 
---26)Write an SQL query to find how many users visited the bank and 
+-- 26)Write an SQL query to find how many users visited the bank and 
 --didnt do any transactions, how many visited the bank and did one 
 --transaction and so on.
 
